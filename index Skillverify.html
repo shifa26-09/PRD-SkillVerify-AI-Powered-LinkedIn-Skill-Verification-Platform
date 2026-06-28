@@ -1,0 +1,1372 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head><base href="https://d16ilfvy4mv02r.cloudfront.net/workspaces/Gd4IWT23zkY3AAjMoZuSeU3WWpuzK9W0/9e471b3b-61c1-4a74-8fcc-3730b1f7f613/files/">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SkillVerify: AI-Powered LinkedIn Skill Verification</title>
+<style>
+  :root {
+    --primary: #4F46E5;
+    --primary-light: #EEF2FF;
+    --primary-dark: #3730A3;
+    --accent: #06B6D4;
+    --accent-light: #ECFEFF;
+    --success: #10B981;
+    --success-light: #D1FAE5;
+    --warning: #F59E0B;
+    --warning-light: #FEF3C7;
+    --danger: #EF4444;
+    --surface: #FFFFFF;
+    --surface2: #F8FAFC;
+    --border: #E2E8F0;
+    --text: #0F172A;
+    --text2: #475569;
+    --text3: #94A3B8;
+    --sidebar-w: 240px;
+    --radius: 12px;
+    --shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.06);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,.12);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--surface2); color: var(--text); min-height: 100vh; }
+
+  /* MODALS */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15,23,42,.55); backdrop-filter: blur(2px); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+  .modal-overlay.open { display: flex; animation: modalFadeIn .15s ease; }
+  @keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .modal-box { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow-lg); max-width: 460px; width: 100%; max-height: 88vh; overflow-y: auto; animation: modalPopIn .18s ease; }
+  .modal-box-sm { max-width: 380px; }
+  @keyframes modalPopIn { from { opacity: 0; transform: translateY(8px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--border); }
+  .modal-title { font-size: 16px; font-weight: 700; color: var(--text); }
+  .modal-close { background: var(--surface2); border: none; width: 28px; height: 28px; border-radius: 8px; font-size: 13px; color: var(--text2); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .15s; }
+  .modal-close:hover { background: var(--border); }
+  .modal-body { padding: 24px; }
+  .modal-footer { padding: 16px 24px 24px; }
+  .modal-footer-note { text-align: center; font-size: 13px; color: var(--text2); padding-top: 4px; }
+  .modal-footer-note a { color: var(--primary); font-weight: 600; text-decoration: none; }
+  .hiw-step { display: flex; gap: 14px; margin-bottom: 22px; }
+  .hiw-step:last-child { margin-bottom: 0; }
+  .hiw-num { flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%; background: var(--primary-light); color: var(--primary); font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+  .hiw-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .hiw-text { font-size: 13px; color: var(--text2); line-height: 1.5; }
+  .modal-divider { display: flex; align-items: center; text-align: center; font-size: 12px; color: var(--text3); margin: 14px 0; }
+  .modal-divider::before, .modal-divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border); }
+  .modal-divider span { padding: 0 10px; }
+  .modal-label { display: block; font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 6px; margin-top: 12px; }
+  .modal-input { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; font-family: inherit; color: var(--text); }
+  .modal-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
+
+  /* NAV TABS */
+  .screen-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--text); display: flex; align-items: center; gap: 4px; padding: 10px 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.3);
+  }
+  .screen-nav .brand { color: white; font-weight: 700; font-size: 14px; margin-right: 16px; opacity: 0.9; letter-spacing: -.3px; }
+  .screen-nav .label { color: rgba(255,255,255,.5); font-size: 11px; margin-right: 8px; text-transform: uppercase; letter-spacing: .5px; }
+  .tab-btn {
+    background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12);
+    color: rgba(255,255,255,.7); padding: 6px 14px; border-radius: 6px;
+    font-size: 12px; font-weight: 500; cursor: pointer; transition: all .2s; white-space: nowrap;
+  }
+  .tab-btn:hover { background: rgba(255,255,255,.15); color: white; }
+  .tab-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+  /* SCREENS */
+  .screen { display: none; padding-top: 56px; min-height: 100vh; }
+  .screen.active { display: block; }
+
+  /* ── SCREEN 0: LANDING ── */
+  .landing { background: linear-gradient(135deg, #0F172A 0%, #1E1B4B 50%, #0F172A 100%); min-height: 100vh; display: flex; flex-direction: column; }
+  .landing-nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 48px; }
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .logo-text { font-size: 20px; font-weight: 700; color: white; letter-spacing: -.5px; }
+  .nav-links { display: flex; gap: 32px; align-items: center; }
+  .nav-links a { color: rgba(255,255,255,.7); text-decoration: none; font-size: 14px; transition: color .2s; }
+  .nav-links a:hover { color: white; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: all .2s; text-decoration: none; }
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(79,70,229,.4); }
+  .btn-outline { background: transparent; color: white; border: 1.5px solid rgba(255,255,255,.3); }
+  .btn-outline:hover { border-color: white; background: rgba(255,255,255,.05); }
+  .btn-lg { padding: 14px 28px; font-size: 16px; border-radius: 10px; }
+  .btn-white { background: white; color: var(--primary); }
+  .btn-white:hover { background: #f0f0ff; transform: translateY(-1px); }
+
+  .hero { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 80px 24px 60px; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(79,70,229,.2); border: 1px solid rgba(79,70,229,.4); color: #A5B4FC; padding: 6px 14px; border-radius: 100px; font-size: 12px; font-weight: 600; margin-bottom: 28px; }
+  .hero h1 { font-size: clamp(36px, 5vw, 64px); font-weight: 800; color: white; line-height: 1.1; letter-spacing: -2px; max-width: 820px; margin-bottom: 20px; }
+  .hero h1 span { background: linear-gradient(135deg, #818CF8, #06B6D4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero p { font-size: 18px; color: rgba(255,255,255,.65); max-width: 560px; line-height: 1.7; margin-bottom: 40px; }
+  .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .hero-stats { display: flex; gap: 48px; margin-top: 72px; flex-wrap: wrap; justify-content: center; }
+  .stat { text-align: center; }
+  .stat-num { font-size: 32px; font-weight: 800; color: white; letter-spacing: -1px; }
+  .stat-label { font-size: 13px; color: rgba(255,255,255,.5); margin-top: 4px; }
+  .trust-bar { display: flex; align-items: center; gap: 24px; margin-top: 64px; color: rgba(255,255,255,.4); font-size: 13px; flex-wrap: wrap; justify-content: center; }
+  .trust-bar span { color: rgba(255,255,255,.6); font-weight: 600; }
+
+  /* FLOATING CARDS */
+  .float-cards { display: flex; gap: 16px; margin-top: 56px; flex-wrap: wrap; justify-content: center; max-width: 900px; }
+  .float-card { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); backdrop-filter: blur(12px); border-radius: 14px; padding: 20px; width: 260px; }
+  .float-card .fc-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .fc-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; }
+  .fc-name { font-size: 13px; font-weight: 600; color: white; }
+  .fc-role { font-size: 11px; color: rgba(255,255,255,.5); }
+  .skill-badge-mini { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 100px; font-size: 11px; font-weight: 600; margin: 3px 2px; }
+  .badge-verified { background: rgba(16,185,129,.2); color: #34D399; border: 1px solid rgba(16,185,129,.3); }
+  .badge-proficient { background: rgba(6,182,212,.2); color: #22D3EE; border: 1px solid rgba(6,182,212,.3); }
+  .badge-developing { background: rgba(245,158,11,.2); color: #FCD34D; border: 1px solid rgba(245,158,11,.3); }
+  .score-pill { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; }
+  .score-verified { color: #34D399; }
+
+  /* ── SCREEN 1: JOB SEEKER DASHBOARD ── */
+  .app-shell { display: flex; min-height: calc(100vh - 56px); }
+  .sidebar { width: var(--sidebar-w); background: white; border-right: 1px solid var(--border); padding: 24px 0; flex-shrink: 0; }
+  .sidebar-logo { display: flex; align-items: center; gap: 8px; padding: 0 20px 24px; border-bottom: 1px solid var(--border); }
+  .sidebar-logo-icon { width: 30px; height: 30px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+  .sidebar-logo-text { font-size: 16px; font-weight: 700; color: var(--text); letter-spacing: -.4px; }
+  .sidebar-section { padding: 16px 12px 4px; }
+  .sidebar-label { font-size: 10px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: .8px; padding: 0 8px; margin-bottom: 4px; }
+  .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--text2); cursor: pointer; transition: all .15s; }
+  .sidebar-item:hover { background: var(--surface2); color: var(--text); }
+  .sidebar-item.active { background: var(--primary-light); color: var(--primary); font-weight: 600; }
+  .sidebar-item .icon { font-size: 16px; width: 20px; text-align: center; }
+  .sidebar-item .badge-count { margin-left: auto; background: var(--primary); color: white; font-size: 10px; padding: 1px 6px; border-radius: 100px; font-weight: 700; }
+  .sidebar-user { margin-top: auto; padding: 16px 12px 0; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+  .user-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #818CF8, #06B6D4); display: flex; align-items: center; justify-content: center; color: white; font-size: 13px; font-weight: 700; }
+  .user-info { flex: 1; min-width: 0; }
+  .user-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .user-plan { font-size: 11px; color: var(--text3); }
+
+  .main-content { flex: 1; padding: 28px; overflow-y: auto; min-width: 0; }
+  .page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
+  .page-title { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: -.4px; }
+  .page-subtitle { font-size: 14px; color: var(--text2); margin-top: 2px; }
+
+  .cards-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .metric-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 20px; }
+  .metric-card .label { font-size: 12px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; }
+  .metric-card .value { font-size: 28px; font-weight: 800; color: var(--text); letter-spacing: -1px; }
+  .metric-card .sub { font-size: 12px; color: var(--text3); margin-top: 4px; }
+  .metric-card .trend { font-size: 12px; font-weight: 600; margin-top: 6px; }
+  .trend-up { color: var(--success); }
+
+  /* Progress ring */
+  .progress-section { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 24px; margin-bottom: 24px; display: flex; align-items: center; gap: 32px; }
+  .ring-wrap { position: relative; width: 100px; height: 100px; flex-shrink: 0; }
+  .ring-wrap svg { transform: rotate(-90deg); }
+  .ring-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; }
+  .ring-pct { font-size: 22px; font-weight: 800; color: var(--primary); letter-spacing: -1px; }
+  .ring-lbl { font-size: 9px; color: var(--text3); font-weight: 600; text-transform: uppercase; }
+  .progress-info h3 { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .progress-info p { font-size: 13px; color: var(--text2); line-height: 1.5; }
+  .progress-steps { display: flex; gap: 12px; margin-top: 14px; flex-wrap: wrap; }
+  .step-chip { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; color: var(--text2); }
+  .step-chip .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-done { background: var(--success); }
+  .dot-active { background: var(--primary); }
+  .dot-todo { background: var(--border); }
+
+  /* Skill Cards */
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .section-title { font-size: 16px; font-weight: 700; color: var(--text); }
+  .section-link { font-size: 13px; color: var(--primary); font-weight: 600; cursor: pointer; }
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 28px; }
+  .skill-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 20px; transition: all .2s; cursor: pointer; }
+  .skill-card:hover { border-color: var(--primary); box-shadow: var(--shadow); transform: translateY(-2px); }
+  .skill-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
+  .skill-name { font-size: 15px; font-weight: 700; color: var(--text); }
+  .skill-category { font-size: 11px; color: var(--text3); font-weight: 500; margin-top: 2px; }
+  .skill-tier { padding: 4px 10px; border-radius: 100px; font-size: 11px; font-weight: 700; }
+  .tier-verified { background: var(--success-light); color: var(--success); }
+  .tier-proficient { background: var(--accent-light); color: var(--accent); }
+  .tier-developing { background: var(--warning-light); color: var(--warning); }
+  .tier-unverified { background: var(--surface2); color: var(--text3); }
+  .score-bar-wrap { margin-bottom: 14px; }
+  .score-bar-top { display: flex; justify-content: space-between; margin-bottom: 6px; }
+  .score-label { font-size: 12px; color: var(--text3); }
+  .score-value { font-size: 12px; font-weight: 700; color: var(--text); }
+  .score-bar { height: 6px; background: var(--surface2); border-radius: 100px; overflow: hidden; }
+  .score-fill { height: 100%; border-radius: 100px; transition: width 1s; }
+  .fill-verified { background: linear-gradient(90deg, var(--success), #34D399); }
+  .fill-proficient { background: linear-gradient(90deg, var(--accent), #22D3EE); }
+  .fill-developing { background: linear-gradient(90deg, var(--warning), #FCD34D); }
+  .fill-unverified { background: var(--text3); }
+  .skill-evidence { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .evidence-tag { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text2); background: var(--surface2); padding: 3px 8px; border-radius: 100px; border: 1px solid var(--border); }
+  .skill-action { width: 100%; padding: 8px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1.5px solid var(--primary); color: var(--primary); background: transparent; transition: all .2s; }
+  .skill-action.complete { border-color: var(--success); color: var(--success); background: var(--success-light); }
+  .skill-action:hover:not(.complete) { background: var(--primary); color: white; }
+
+  /* ── SCREEN 2: ASSESSMENT ── */
+  .assessment-wrap { min-height: calc(100vh - 56px); background: var(--surface2); display: flex; flex-direction: column; }
+  .assessment-topbar { background: white; border-bottom: 1px solid var(--border); padding: 16px 32px; display: flex; align-items: center; gap: 24px; }
+  .assessment-skill { font-size: 16px; font-weight: 700; color: var(--text); }
+  .assessment-progress { flex: 1; display: flex; align-items: center; gap: 12px; }
+  .progress-track { flex: 1; height: 6px; background: var(--surface2); border-radius: 100px; max-width: 300px; }
+  .progress-fill { height: 100%; border-radius: 100px; background: linear-gradient(90deg, var(--primary), var(--accent)); width: 33%; }
+  .progress-text { font-size: 13px; font-weight: 600; color: var(--text2); white-space: nowrap; }
+  .timer { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; color: var(--text); background: var(--surface2); padding: 6px 14px; border-radius: 8px; }
+  .timer.warning { color: var(--danger); background: #FEE2E2; }
+
+  .assessment-body { flex: 1; display: flex; gap: 24px; padding: 28px 32px; max-width: 1200px; width: 100%; margin: 0 auto; }
+  .question-panel { flex: 1; }
+  .q-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 32px; margin-bottom: 20px; }
+  .q-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .q-type-tag { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+  .tag-mcq { background: var(--primary-light); color: var(--primary); }
+  .tag-code { background: #1E1B4B; color: #A5B4FC; }
+  .tag-scenario { background: var(--accent-light); color: var(--accent); }
+  .q-points { font-size: 12px; color: var(--text3); margin-left: auto; }
+  .q-text { font-size: 17px; font-weight: 600; color: var(--text); line-height: 1.6; margin-bottom: 24px; }
+  .q-options { display: flex; flex-direction: column; gap: 10px; }
+  .q-option { display: flex; align-items: flex-start; gap: 14px; padding: 14px 16px; border-radius: 10px; border: 1.5px solid var(--border); cursor: pointer; transition: all .15s; font-size: 14px; color: var(--text2); }
+  .q-option:hover { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+  .q-option.selected { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+  .q-option input { margin-top: 1px; accent-color: var(--primary); }
+  .code-editor { background: #0F172A; border-radius: 10px; padding: 20px; font-family: 'Fira Code', 'Courier New', monospace; font-size: 13px; color: #E2E8F0; min-height: 200px; line-height: 1.7; border: 1.5px solid #1E293B; }
+  .code-keyword { color: #818CF8; }
+  .code-string { color: #34D399; }
+  .code-comment { color: #475569; }
+  .code-fn { color: #F472B6; }
+  .code-num { color: #FB923C; }
+
+  .assessment-sidebar { width: 280px; flex-shrink: 0; }
+  .aside-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 20px; margin-bottom: 16px; }
+  .aside-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 14px; }
+  .q-map { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+  .q-dot { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; cursor: pointer; }
+  .q-dot.done { background: var(--success-light); color: var(--success); }
+  .q-dot.current { background: var(--primary); color: white; }
+  .q-dot.todo { background: var(--surface2); color: var(--text3); }
+  .aside-info { display: flex; flex-direction: column; gap: 10px; }
+  .info-row { display: flex; justify-content: space-between; font-size: 13px; }
+  .info-label { color: var(--text3); }
+  .info-val { font-weight: 600; color: var(--text); }
+  .assessment-footer { background: white; border-top: 1px solid var(--border); padding: 16px 32px; display: flex; align-items: center; gap: 12px; }
+  .btn-ghost { background: transparent; border: 1.5px solid var(--border); color: var(--text2); }
+  .btn-ghost:hover { border-color: var(--text2); color: var(--text); }
+
+  /* ── SCREEN 3: PUBLIC PROFILE ── */
+  .profile-wrap { max-width: 800px; margin: 0 auto; padding: 36px 24px; }
+  .profile-hero { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 32px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 24px; }
+  .profile-avatar { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #818CF8, #06B6D4); display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; font-weight: 800; flex-shrink: 0; }
+  .profile-name { font-size: 24px; font-weight: 800; color: var(--text); letter-spacing: -.5px; }
+  .profile-headline { font-size: 15px; color: var(--text2); margin-top: 4px; }
+  .profile-meta { display: flex; gap: 16px; margin-top: 12px; flex-wrap: wrap; }
+  .meta-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text3); }
+  .verified-stamp { margin-left: auto; flex-shrink: 0; text-align: center; }
+  .stamp-icon { font-size: 40px; }
+  .stamp-text { font-size: 11px; font-weight: 700; color: var(--success); margin-top: 4px; }
+
+  .profile-section { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 24px; margin-bottom: 20px; }
+  .ps-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+  .badge-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+  .badge-card { border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+  .badge-card.verified-card { border-color: rgba(16,185,129,.3); background: linear-gradient(135deg, rgba(16,185,129,.03), rgba(6,182,212,.03)); }
+  .badge-card.proficient-card { border-color: rgba(6,182,212,.3); background: rgba(6,182,212,.03); }
+  .badge-top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .badge-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .badge-icon.v { background: var(--success-light); }
+  .badge-icon.p { background: var(--accent-light); }
+  .badge-skill { font-size: 14px; font-weight: 700; color: var(--text); }
+  .badge-date { font-size: 11px; color: var(--text3); }
+  .badge-score-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .badge-score-num { font-size: 22px; font-weight: 800; color: var(--text); }
+  .badge-score-max { font-size: 13px; color: var(--text3); }
+  .mini-bar { height: 4px; background: var(--surface2); border-radius: 100px; overflow: hidden; margin-bottom: 10px; }
+  .mini-fill-v { background: linear-gradient(90deg, var(--success), #34D399); height: 100%; border-radius: 100px; }
+  .mini-fill-p { background: linear-gradient(90deg, var(--accent), #22D3EE); height: 100%; border-radius: 100px; }
+  .evidence-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .ev-tag { display: flex; align-items: center; gap: 4px; font-size: 10px; color: var(--text3); background: var(--surface2); padding: 2px 7px; border-radius: 100px; }
+
+  .evidence-summary { display: flex; gap: 16px; flex-wrap: wrap; }
+  .ev-summary-card { flex: 1; min-width: 120px; border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; }
+  .ev-icon { font-size: 24px; margin-bottom: 8px; }
+  .ev-count { font-size: 20px; font-weight: 800; color: var(--text); }
+  .ev-label { font-size: 12px; color: var(--text3); margin-top: 2px; }
+
+  .recruiter-cta { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: var(--radius); padding: 24px; text-align: center; }
+  .recruiter-cta h3 { color: white; font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .recruiter-cta p { color: rgba(255,255,255,.7); font-size: 14px; margin-bottom: 16px; }
+
+  /* ── SCREEN 4: RECRUITER ── */
+  .recruiter-wrap { display: flex; min-height: calc(100vh - 56px); }
+  .rec-sidebar { width: 280px; background: white; border-right: 1px solid var(--border); padding: 24px; flex-shrink: 0; }
+  .rec-main { flex: 1; padding: 28px; min-width: 0; }
+  .filter-section { margin-bottom: 24px; }
+  .filter-label { font-size: 12px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px; }
+  .filter-select { width: 100%; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 13px; color: var(--text); background: white; }
+  .skill-filter-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+  .skill-filter-tag { display: flex; align-items: center; gap: 6px; padding: 5px 10px; background: var(--primary-light); color: var(--primary); border-radius: 100px; font-size: 12px; font-weight: 600; }
+  .skill-filter-tag .remove { cursor: pointer; opacity: .6; }
+  .score-slider-wrap { display: flex; align-items: center; gap: 12px; }
+  .score-slider { flex: 1; accent-color: var(--primary); }
+  .score-val { font-size: 14px; font-weight: 700; color: var(--primary); min-width: 32px; }
+  .job-profile-card { background: linear-gradient(135deg, var(--primary-light), var(--accent-light)); border: 1.5px solid rgba(79,70,229,.2); border-radius: 10px; padding: 16px; margin-bottom: 24px; }
+  .jp-title { font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+  .jp-sub { font-size: 12px; color: var(--text2); }
+  .jp-skills { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .jp-skill-tag { padding: 3px 10px; background: white; border: 1px solid rgba(79,70,229,.2); border-radius: 100px; font-size: 11px; font-weight: 600; color: var(--primary); }
+
+  .rec-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+  .results-count { font-size: 14px; color: var(--text2); }
+  .results-count strong { color: var(--text); }
+  .sort-row { display: flex; gap: 8px; align-items: center; }
+  .sort-btn { padding: 7px 14px; border-radius: 8px; border: 1.5px solid var(--border); background: white; font-size: 13px; font-weight: 500; cursor: pointer; color: var(--text2); transition: all .15s; }
+  .sort-btn.active { border-color: var(--primary); color: var(--primary); background: var(--primary-light); font-weight: 600; }
+
+  .candidate-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+  .candidate-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); padding: 20px; transition: all .2s; }
+  .candidate-card:hover { border-color: var(--primary); box-shadow: var(--shadow); }
+  .candidate-card.top-match { border-color: var(--success); }
+  .cc-top { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+  .cc-avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; color: white; flex-shrink: 0; }
+  .cc-name { font-size: 15px; font-weight: 700; color: var(--text); }
+  .cc-title { font-size: 12px; color: var(--text3); margin-top: 2px; }
+  .cc-match { margin-left: auto; text-align: center; }
+  .match-pct { font-size: 20px; font-weight: 800; letter-spacing: -1px; }
+  .match-pct.high { color: var(--success); }
+  .match-pct.med { color: var(--warning); }
+  .match-label { font-size: 10px; color: var(--text3); font-weight: 600; }
+  .cc-skills { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+  .cc-skill-row { display: flex; align-items: center; gap: 10px; }
+  .cc-skill-name { font-size: 12px; font-weight: 600; color: var(--text); width: 80px; flex-shrink: 0; }
+  .cc-bar { flex: 1; height: 5px; background: var(--surface2); border-radius: 100px; overflow: hidden; }
+  .cc-bar-fill { height: 100%; border-radius: 100px; }
+  .cc-score { font-size: 12px; font-weight: 700; color: var(--text); min-width: 28px; text-align: right; }
+  .cc-tier-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .cc-actions { display: flex; gap: 8px; }
+  .cc-btn { flex: 1; padding: 8px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; text-align: center; border: 1.5px solid; transition: all .15s; }
+  .cc-btn-view { border-color: var(--primary); color: var(--primary); background: transparent; }
+  .cc-btn-view:hover { background: var(--primary); color: white; }
+  .cc-btn-save { border-color: var(--success); color: var(--success); background: transparent; }
+  .cc-btn-save:hover { background: var(--success); color: white; }
+  .top-match-tag { display: inline-flex; align-items: center; gap: 4px; background: var(--success-light); color: var(--success); padding: 3px 8px; border-radius: 100px; font-size: 10px; font-weight: 700; margin-bottom: 8px; }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .float-cards { display: none; }
+    .assessment-sidebar { display: none; }
+    .rec-sidebar { display: none; }
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .screen.active > * { animation: fadeIn .3s ease; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .6; } }
+  .pulsing { animation: pulse 2s infinite; }
+</style>
+</head>
+<body>
+
+<!-- NAV TABS -->
+<nav class="screen-nav">
+  <span class="brand">🔍 SkillVerify</span>
+  <span class="label">Screens:</span>
+  <button class="tab-btn active" onclick="showScreen(0)">🏠 Landing</button>
+  <button class="tab-btn" onclick="showScreen(1)">👤 Job Seeker</button>
+  <button class="tab-btn" onclick="showScreen(2)">📝 Assessment</button>
+  <button class="tab-btn" onclick="showScreen(3)">🏅 Public Profile</button>
+  <button class="tab-btn" onclick="showScreen(4)">🔎 Recruiter</button>
+</nav>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN 0: LANDING PAGE
+═══════════════════════════════════════════════ -->
+<div class="screen active" id="screen-0">
+  <div class="landing">
+    <nav class="landing-nav">
+      <div class="logo">
+        <div class="logo-icon">✦</div>
+        <span class="logo-text">SkillVerify</span>
+      </div>
+      <div class="nav-links">
+        <a href="#" onclick="openModal('how-it-works-modal'); return false;">How it works</a>
+        <a href="#" onclick="showScreen(4); return false;">For Recruiters</a>
+        <button class="btn btn-outline" style="padding:8px 16px;font-size:13px;" onclick="openModal('login-modal')">Log in</button>
+        <button class="btn btn-primary" style="padding:8px 16px;font-size:13px;" onclick="showScreen(1)">Get started</button>
+      </div>
+    </nav>
+
+    <div class="hero">
+      <div class="hero-badge">✦ Powered by GPT-4o &nbsp;·&nbsp; Open Badges 3.0</div>
+      <h1>Your Skills, <span>Verified.</span><br/>Your Profile, <span>Trusted.</span></h1>
+      <p>Connect LinkedIn, upload your work, complete AI assessments and earn verified skill badges that recruiters actually believe.</p>
+      <div class="hero-ctas">
+        <button class="btn btn-white btn-lg" onclick="showScreen(1)">⚡ Verify My Skills</button>
+        <button class="btn btn-outline btn-lg" onclick="showScreen(4)">🔎 I'm a Recruiter</button>
+      </div>
+
+      <div class="float-cards">
+        <div class="float-card">
+          <div class="fc-header">
+            <div class="fc-avatar" style="background:linear-gradient(135deg,#818CF8,#06B6D4)">A</div>
+            <div><div class="fc-name">Ayesha Raza</div><div class="fc-role">Senior Engineer · Lahore</div></div>
+          </div>
+          <div>
+            <span class="skill-badge-mini badge-verified">✓ Python: 94</span>
+            <span class="skill-badge-mini badge-verified">✓ React: 88</span>
+            <span class="skill-badge-mini badge-proficient">✓ AWS: 76</span>
+          </div>
+        </div>
+        <div class="float-card">
+          <div class="fc-header">
+            <div class="fc-avatar" style="background:linear-gradient(135deg,#F59E0B,#EF4444)">J</div>
+            <div><div class="fc-name">Usman Khalid</div><div class="fc-role">Product Designer · Karachi</div></div>
+          </div>
+          <div>
+            <span class="skill-badge-mini badge-verified">✓ Figma: 91</span>
+            <span class="skill-badge-mini badge-verified">✓ UX Research: 85</span>
+            <span class="skill-badge-mini badge-developing">↑ CSS: 58</span>
+          </div>
+        </div>
+        <div class="float-card">
+          <div class="fc-header">
+            <div class="fc-avatar" style="background:linear-gradient(135deg,#10B981,#06B6D4)">M</div>
+            <div><div class="fc-name">Zainab Hussain</div><div class="fc-role">Data Scientist · Lahore</div></div>
+          </div>
+          <div>
+            <span class="skill-badge-mini badge-verified">✓ ML/PyTorch: 90</span>
+            <span class="skill-badge-mini badge-proficient">✓ SQL: 79</span>
+            <span class="skill-badge-mini badge-proficient">✓ Python: 82</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-num">100K+</div><div class="stat-label">Verified Professionals</div></div>
+        <div class="stat"><div class="stat-num">40%</div><div class="stat-label">Faster Time-to-Hire</div></div>
+        <div class="stat"><div class="stat-num">98%</div><div class="stat-label">Badge Accuracy Rate</div></div>
+        <div class="stat"><div class="stat-num">3,200+</div><div class="stat-label">Hiring Companies</div></div>
+      </div>
+
+      <div class="trust-bar">
+        <span>Trusted by teams at</span>
+        <span>Google</span> · <span>Stripe</span> · <span>Notion</span> · <span>Shopify</span> · <span>Atlassian</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN 1: JOB SEEKER DASHBOARD
+═══════════════════════════════════════════════ -->
+<div class="screen" id="screen-1">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon">✦</div>
+        <span class="sidebar-logo-text">SkillVerify</span>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Main</div>
+        <div class="sidebar-item active" onclick="showScreen(1)"><span class="icon">📊</span> Dashboard</div>
+        <div class="sidebar-item" onclick="showScreen(1); document.getElementById('skills-section').scrollIntoView({behavior:'smooth'})"><span class="icon">🔬</span> My Skills</div>
+        <div class="sidebar-item" onclick="showScreen(2)"><span class="icon">📝</span> Assessments <span class="badge-count">2</span></div>
+        <div class="sidebar-item" onclick="showScreen(3)"><span class="icon">🏅</span> My Badges</div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Evidence</div>
+        <div class="sidebar-item" onclick="comingSoon('Documents')"><span class="icon">📄</span> Documents</div>
+        <div class="sidebar-item" onclick="comingSoon('GitHub')"><span class="icon">🐙</span> GitHub</div>
+        <div class="sidebar-item" onclick="comingSoon('Certificates')"><span class="icon">🎓</span> Certificates</div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Profile</div>
+        <div class="sidebar-item" onclick="showScreen(3)"><span class="icon">👤</span> Public Profile</div>
+        <div class="sidebar-item" onclick="comingSoon('Settings')"><span class="icon">⚙️</span> Settings</div>
+      </div>
+      <div class="sidebar-user" style="margin-top:32px;">
+        <div class="user-avatar">AR</div>
+        <div class="user-info">
+          <div class="user-name">Ayesha Raza</div>
+          <div class="user-plan">Pro Plan</div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Welcome back, Ayesha 👋</div>
+          <div class="page-subtitle">You have 2 pending assessments and 3 verified badges.</div>
+        </div>
+        <button class="btn btn-primary" onclick="showScreen(3)">🔗 Share My Profile</button>
+      </div>
+
+      <!-- Metrics -->
+      <div class="cards-row">
+        <div class="metric-card">
+          <div class="label">Verified Skills</div>
+          <div class="value">3</div>
+          <div class="trend trend-up">↑ +1 this month</div>
+        </div>
+        <div class="metric-card">
+          <div class="label">Profile Views</div>
+          <div class="value">142</div>
+          <div class="trend trend-up">↑ +28 this week</div>
+        </div>
+        <div class="metric-card">
+          <div class="label">Recruiter Saves</div>
+          <div class="value">12</div>
+          <div class="trend trend-up">↑ +4 this week</div>
+        </div>
+        <div class="metric-card">
+          <div class="label">Overall Score</div>
+          <div class="value">84</div>
+          <div class="sub">Out of 100</div>
+        </div>
+      </div>
+
+      <!-- Progress -->
+      <div class="progress-section">
+        <div class="ring-wrap">
+          <svg width="100" height="100" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#EEF2FF" stroke-width="10"/>
+            <circle cx="50" cy="50" r="40" fill="none" stroke="url(#grad)" stroke-width="10" stroke-dasharray="251.2" stroke-dashoffset="88" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#4F46E5"/>
+                <stop offset="100%" stop-color="#06B6D4"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="ring-center"><div class="ring-pct">65%</div><div class="ring-lbl">Verified</div></div>
+        </div>
+        <div class="progress-info">
+          <h3>Your profile is 65% verified</h3>
+          <p>Complete 2 more skill assessments to unlock a <strong>Fully Verified</strong> badge and appear in more recruiter searches.</p>
+          <div class="progress-steps">
+            <div class="step-chip"><div class="dot dot-done"></div> LinkedIn Connected</div>
+            <div class="step-chip"><div class="dot dot-done"></div> Resume Uploaded</div>
+            <div class="step-chip"><div class="dot dot-done"></div> GitHub Linked</div>
+            <div class="step-chip"><div class="dot dot-active pulsing"></div> Python Assessment</div>
+            <div class="step-chip"><div class="dot dot-todo"></div> AWS Assessment</div>
+          </div>
+        </div>
+        <button class="btn btn-primary" style="flex-shrink:0;" onclick="showScreen(2)">▶ Continue Assessment</button>
+      </div>
+
+      <!-- Skill Gap Intelligence (NEW — standalone value, no recruiter dependency) -->
+      <div class="section-header">
+        <div class="section-title">📊 Skill Gap Intelligence</div>
+        <span class="section-link">Change target role →</span>
+      </div>
+      <div style="background:white;border-radius:var(--radius);border:1px solid var(--border);padding:24px;margin-bottom:28px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:8px;">
+          <div>
+            <div style="font-size:14px;font-weight:700;color:var(--text);">Target role: Senior Full-Stack Engineer · Remote</div>
+            <div style="font-size:12px;color:var(--text3);margin-top:2px;">Based on 1,240 live job postings analyzed this week</div>
+          </div>
+          <span style="background:var(--primary-light);color:var(--primary);font-size:11px;font-weight:700;padding:5px 12px;border-radius:100px;">No recruiter activity needed</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;">
+          <div style="border:1px solid var(--border);border-radius:10px;padding:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <span style="font-size:13px;font-weight:700;color:var(--text);">🐳 Docker</span>
+              <span style="font-size:11px;font-weight:700;color:var(--danger);">High demand gap</span>
+            </div>
+            <div style="font-size:12px;color:var(--text2);line-height:1.5;">Required in <strong>74%</strong> of matching postings. Your score: <strong>28/100</strong> (Unverified). Closing this gap is your highest-leverage next step.</div>
+            <button class="skill-action" style="margin-top:10px;" onclick="showScreen(2)">▶ Close This Gap</button>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:10px;padding:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <span style="font-size:13px;font-weight:700;color:var(--text);">☁️ AWS</span>
+              <span style="font-size:11px;font-weight:700;color:var(--warning);">Moderate gap</span>
+            </div>
+            <div style="font-size:12px;color:var(--text2);line-height:1.5;">Required in <strong>61%</strong> of postings. Your score: <strong>52/100</strong> (Developing). 2 more correct assessment answers → Proficient.</div>
+            <button class="skill-action" style="margin-top:10px;" onclick="showScreen(2)">▶ Close This Gap</button>
+          </div>
+          <div style="border:1px solid var(--border);border-radius:10px;padding:14px;background:var(--success-light);border-color:rgba(16,185,129,.3);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <span style="font-size:13px;font-weight:700;color:var(--text);">🐍 Python + ⚛️ React</span>
+              <span style="font-size:11px;font-weight:700;color:var(--success);">✓ Covered</span>
+            </div>
+            <div style="font-size:12px;color:var(--text2);line-height:1.5;">Required in 88% / 79% of postings respectively. You're already Verified in both, ahead of most applicants for this role.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skills -->
+      <div class="section-header" id="skills-section">
+        <div class="section-title">My Skills</div>
+        <span class="section-link">View all →</span>
+      </div>
+      <div class="skills-grid">
+        <!-- Skill 1 -->
+        <div class="skill-card">
+          <div class="skill-header">
+            <div><div class="skill-name">🐍 Python</div><div class="skill-category">Programming Language</div></div>
+            <span class="skill-tier tier-verified">✓ Verified</span>
+          </div>
+          <div class="score-bar-wrap">
+            <div class="score-bar-top"><span class="score-label">Confidence Score</span><span class="score-value">94 / 100</span></div>
+            <div class="score-bar"><div class="score-fill fill-verified" style="width:94%"></div></div>
+          </div>
+          <div class="skill-evidence">
+            <span class="evidence-tag">🐙 8 repos</span>
+            <span class="evidence-tag">📄 Resume</span>
+            <span class="evidence-tag">📝 Assessment</span>
+          </div>
+          <button class="skill-action complete">✓ Badge Issued, Expires Jun 2027</button>
+        </div>
+        <!-- Skill 2 -->
+        <div class="skill-card">
+          <div class="skill-header">
+            <div><div class="skill-name">⚛️ React</div><div class="skill-category">Frontend Framework</div></div>
+            <span class="skill-tier tier-verified">✓ Verified</span>
+          </div>
+          <div class="score-bar-wrap">
+            <div class="score-bar-top"><span class="score-label">Confidence Score</span><span class="score-value">88 / 100</span></div>
+            <div class="score-bar"><div class="score-fill fill-verified" style="width:88%"></div></div>
+          </div>
+          <div class="skill-evidence">
+            <span class="evidence-tag">🐙 3 repos</span>
+            <span class="evidence-tag">🔗 Portfolio</span>
+            <span class="evidence-tag">📝 Assessment</span>
+          </div>
+          <button class="skill-action complete">✓ Badge Issued, Expires Jun 2027</button>
+        </div>
+        <!-- Skill 3 -->
+        <div class="skill-card">
+          <div class="skill-header">
+            <div><div class="skill-name">☁️ AWS</div><div class="skill-category">Cloud Platform</div></div>
+            <span class="skill-tier tier-developing">↑ In Progress</span>
+          </div>
+          <div class="score-bar-wrap">
+            <div class="score-bar-top"><span class="score-label">Confidence Score</span><span class="score-value">52 / 100</span></div>
+            <div class="score-bar"><div class="score-fill fill-developing" style="width:52%"></div></div>
+          </div>
+          <div class="skill-evidence">
+            <span class="evidence-tag">📄 Resume</span>
+            <span class="evidence-tag">🎓 AWS Cert</span>
+          </div>
+          <button class="skill-action" onclick="showScreen(2)">▶ Take Assessment (+32 pts needed)</button>
+        </div>
+        <!-- Skill 4 -->
+        <div class="skill-card">
+          <div class="skill-header">
+            <div><div class="skill-name">🐳 Docker</div><div class="skill-category">DevOps</div></div>
+            <span class="skill-tier tier-unverified">Unverified</span>
+          </div>
+          <div class="score-bar-wrap">
+            <div class="score-bar-top"><span class="score-label">Confidence Score</span><span class="score-value">28 / 100</span></div>
+            <div class="score-bar"><div class="score-fill fill-unverified" style="width:28%"></div></div>
+          </div>
+          <div class="skill-evidence">
+            <span class="evidence-tag">📄 Resume only</span>
+          </div>
+          <button class="skill-action" onclick="comingSoon('Evidence upload')">📤 Upload Evidence First</button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN 2: AI ASSESSMENT
+═══════════════════════════════════════════════ -->
+<div class="screen" id="screen-2">
+  <div class="assessment-wrap">
+    <div class="assessment-topbar">
+      <div class="assessment-skill">☁️ AWS: Cloud Practitioner Assessment</div>
+      <div class="assessment-progress">
+        <div class="progress-track"><div class="progress-fill"></div></div>
+        <div class="progress-text">Question 4 of 12</div>
+      </div>
+      <div class="timer">⏱ 18:42</div>
+    </div>
+
+    <div class="assessment-body">
+      <div class="question-panel">
+        <!-- Q4 MCQ -->
+        <div class="q-card">
+          <div class="q-meta">
+            <span class="q-type-tag tag-mcq">Multiple Choice</span>
+            <span style="font-size:12px;color:var(--text3)">Foundational · Cloud Concepts</span>
+            <span class="q-points">5 pts</span>
+          </div>
+          <div class="q-text">
+            A company is running a critical application on an EC2 instance. They need to ensure the application remains available even if a hardware failure occurs in an AWS Availability Zone. What is the <strong>most cost-effective</strong> architecture to achieve this?
+          </div>
+          <div class="q-options">
+            <label class="q-option">
+              <input type="radio" name="q4" value="a" />
+              Deploy the application on a single EC2 instance in one AZ and enable Auto Recovery
+            </label>
+            <label class="q-option selected">
+              <input type="radio" name="q4" value="b" checked/>
+              Deploy the application across two EC2 instances in separate Availability Zones behind an Application Load Balancer
+            </label>
+            <label class="q-option">
+              <input type="radio" name="q4" value="c" />
+              Use an EC2 Reserved Instance in a dedicated tenancy configuration with CloudWatch alarms
+            </label>
+            <label class="q-option">
+              <input type="radio" name="q4" value="d" />
+              Replicate the application across 3 AWS Regions with Global Accelerator
+            </label>
+          </div>
+        </div>
+
+        <!-- Q5 Code -->
+        <div class="q-card">
+          <div class="q-meta">
+            <span class="q-type-tag tag-code">Code Challenge</span>
+            <span style="font-size:12px;color:var(--text3)">Intermediate · AWS SDK (Python)</span>
+            <span class="q-points">15 pts</span>
+          </div>
+          <div class="q-text">
+            Write a Python function using <strong>boto3</strong> that lists all S3 buckets in the current account and returns a dictionary mapping each bucket name to its creation date. Handle any potential <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;font-size:14px;">ClientError</code> exceptions.
+          </div>
+          <div class="code-editor">
+<span class="code-keyword">import</span> boto3<br/>
+<span class="code-keyword">from</span> botocore.exceptions <span class="code-keyword">import</span> ClientError<br/>
+<br/>
+<span class="code-keyword">def</span> <span class="code-fn">list_s3_buckets</span>() -> dict:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-comment"># Initialize the S3 client</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;s3_client = boto3.<span class="code-fn">client</span>(<span class="code-string">'s3'</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;result = {}<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">try</span>:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;response = s3_client.<span class="code-fn">list_buckets</span>()<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">for</span> bucket <span class="code-keyword">in</span> response[<span class="code-string">'Buckets'</span>]:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result[bucket[<span class="code-string">'Name'</span>]] = bucket[<span class="code-string">'CreationDate'</span>]<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">except</span> ClientError <span class="code-keyword">as</span> e:<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-fn">print</span>(<span class="code-string">f"Error: {e.response['Error']['Message']}"</span>)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> result<br/>
+<br/>
+<span class="code-comment"># Your cursor is here ▌</span>
+          </div>
+        </div>
+
+        <div class="assessment-footer">
+          <button class="btn btn-ghost" style="padding:10px 20px;" onclick="comingSoon('Back')">← Back</button>
+          <button class="btn btn-ghost" style="padding:10px 20px;" onclick="comingSoon('Skip')">Skip</button>
+          <span style="flex:1;font-size:12px;color:var(--text3);text-align:center;">🔒 This session is monitored for academic integrity</span>
+          <button class="btn btn-primary" style="padding:10px 24px;" onclick="finishAssessment()">Next Question →</button>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="assessment-sidebar">
+        <div class="aside-card">
+          <div class="aside-title">Question Map</div>
+          <div class="q-map">
+            <div class="q-dot done">1</div>
+            <div class="q-dot done">2</div>
+            <div class="q-dot done">3</div>
+            <div class="q-dot current">4</div>
+            <div class="q-dot todo">5</div>
+            <div class="q-dot todo">6</div>
+            <div class="q-dot todo">7</div>
+            <div class="q-dot todo">8</div>
+            <div class="q-dot todo">9</div>
+            <div class="q-dot todo">10</div>
+            <div class="q-dot todo">11</div>
+            <div class="q-dot todo">12</div>
+          </div>
+        </div>
+        <div class="aside-card">
+          <div class="aside-title">Session Info</div>
+          <div class="aside-info">
+            <div class="info-row"><span class="info-label">Skill</span><span class="info-val">AWS</span></div>
+            <div class="info-row"><span class="info-label">Level</span><span class="info-val">Mixed</span></div>
+            <div class="info-row"><span class="info-label">Answered</span><span class="info-val">3 / 12</span></div>
+            <div class="info-row"><span class="info-label">Time Left</span><span class="info-val" style="color:var(--primary);">18:42</span></div>
+            <div class="info-row"><span class="info-label">Points so far</span><span class="info-val">20 / 25</span></div>
+          </div>
+        </div>
+        <div class="aside-card" style="background:linear-gradient(135deg,var(--primary-light),var(--accent-light));border-color:rgba(79,70,229,.2);">
+          <div class="aside-title" style="color:var(--primary);">💡 Score Projection</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.6;">
+            At current pace, your AWS score will reach <strong style="color:var(--primary);">~76</strong>, <strong>Proficient</strong> tier. Answer 2 more correctly for <strong>Verified</strong> status.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN 3: PUBLIC PROFILE
+═══════════════════════════════════════════════ -->
+<div class="screen" id="screen-3">
+  <div style="background:var(--surface2);padding-top:8px;">
+    <div style="max-width:800px;margin:0 auto;padding:8px 24px 0;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text3);">
+        <span>🔗 skillverify.io/u/ayesha-raza</span>
+        <span style="background:var(--success-light);color:var(--success);padding:2px 8px;border-radius:100px;font-size:11px;font-weight:700;">● Public</span>
+        <button class="btn btn-primary" style="padding:6px 14px;font-size:12px;margin-left:auto;" onclick="copyProfileLink(this)">📋 Copy Link</button>
+      </div>
+    </div>
+  </div>
+  <div class="profile-wrap">
+    <!-- Hero -->
+    <div class="profile-hero">
+      <div class="profile-avatar">AO</div>
+      <div style="flex:1;min-width:0;">
+        <div class="profile-name">Ayesha Raza</div>
+        <div class="profile-headline">Senior Software Engineer · Full-Stack · 5 Years Experience</div>
+        <div class="profile-meta">
+          <span class="meta-item">📍 Lahore, Pakistan</span>
+          <span class="meta-item">💼 Open to Remote</span>
+          <span class="meta-item">🎓 Computer Science, NUST, Islamabad</span>
+        </div>
+      </div>
+      <div class="verified-stamp">
+        <div class="stamp-icon">✅</div>
+        <div class="stamp-text">FULLY<br/>VERIFIED</div>
+      </div>
+    </div>
+
+    <!-- Verified Badges -->
+    <div class="profile-section">
+      <div class="ps-title">🏅 Verified Skills <span style="font-size:13px;font-weight:400;color:var(--text3);">(3 Verified · 1 Proficient)</span></div>
+      <div class="badge-grid">
+        <div class="badge-card verified-card">
+          <div class="badge-top">
+            <div class="badge-icon v">🐍</div>
+            <div><div class="badge-skill">Python</div><div class="badge-date">Verified Jun 2026 · Exp Jun 2027</div></div>
+          </div>
+          <div class="badge-score-row">
+            <div><span class="badge-score-num">94</span><span class="badge-score-max"> / 100</span></div>
+            <span class="skill-tier tier-verified">✓ Verified</span>
+          </div>
+          <div class="mini-bar"><div class="mini-fill-v" style="width:94%"></div></div>
+          <div class="evidence-row">
+            <span class="ev-tag">🐙 8 GitHub repos</span>
+            <span class="ev-tag">📄 Resume</span>
+            <span class="ev-tag">📝 Assessment</span>
+          </div>
+        </div>
+        <div class="badge-card verified-card">
+          <div class="badge-top">
+            <div class="badge-icon v">⚛️</div>
+            <div><div class="badge-skill">React</div><div class="badge-date">Verified May 2026 · Exp May 2027</div></div>
+          </div>
+          <div class="badge-score-row">
+            <div><span class="badge-score-num">88</span><span class="badge-score-max"> / 100</span></div>
+            <span class="skill-tier tier-verified">✓ Verified</span>
+          </div>
+          <div class="mini-bar"><div class="mini-fill-v" style="width:88%"></div></div>
+          <div class="evidence-row">
+            <span class="ev-tag">🐙 3 repos</span>
+            <span class="ev-tag">🔗 Portfolio</span>
+            <span class="ev-tag">📝 Assessment</span>
+          </div>
+        </div>
+        <div class="badge-card verified-card">
+          <div class="badge-top">
+            <div class="badge-icon v">🗄️</div>
+            <div><div class="badge-skill">PostgreSQL</div><div class="badge-date">Verified Apr 2026 · Exp Apr 2027</div></div>
+          </div>
+          <div class="badge-score-row">
+            <div><span class="badge-score-num">81</span><span class="badge-score-max"> / 100</span></div>
+            <span class="skill-tier tier-verified">✓ Verified</span>
+          </div>
+          <div class="mini-bar"><div class="mini-fill-v" style="width:81%"></div></div>
+          <div class="evidence-row">
+            <span class="ev-tag">🐙 5 repos</span>
+            <span class="ev-tag">📝 Assessment</span>
+          </div>
+        </div>
+        <div class="badge-card proficient-card">
+          <div class="badge-top">
+            <div class="badge-icon p">☁️</div>
+            <div><div class="badge-skill">AWS</div><div class="badge-date">Verified Jun 2026 · Exp Jun 2027</div></div>
+          </div>
+          <div class="badge-score-row">
+            <div><span class="badge-score-num">76</span><span class="badge-score-max"> / 100</span></div>
+            <span class="skill-tier tier-proficient">✓ Proficient</span>
+          </div>
+          <div class="mini-bar"><div class="mini-fill-p" style="width:76%"></div></div>
+          <div class="evidence-row">
+            <span class="ev-tag">🎓 AWS Cert</span>
+            <span class="ev-tag">📝 Assessment</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Evidence Summary -->
+    <div class="profile-section">
+      <div class="ps-title">📦 Evidence on File</div>
+      <div class="evidence-summary">
+        <div class="ev-summary-card">
+          <div class="ev-icon">🐙</div>
+          <div class="ev-count">11</div>
+          <div class="ev-label">GitHub Repos Analyzed</div>
+        </div>
+        <div class="ev-summary-card">
+          <div class="ev-icon">📄</div>
+          <div class="ev-count">1</div>
+          <div class="ev-label">Resume Verified</div>
+        </div>
+        <div class="ev-summary-card">
+          <div class="ev-icon">🎓</div>
+          <div class="ev-count">2</div>
+          <div class="ev-label">Certificates Validated</div>
+        </div>
+        <div class="ev-summary-card">
+          <div class="ev-icon">🔗</div>
+          <div class="ev-count">1</div>
+          <div class="ev-label">Portfolio Scanned</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recruiter CTA -->
+    <div class="recruiter-cta">
+      <h3>Are you a recruiter?</h3>
+      <p>Access Ayesha's full verification report, AI hiring insights, and contact details.</p>
+      <button class="btn btn-white" onclick="showScreen(4)">🔎 View Full Report</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SCREEN 4: RECRUITER DASHBOARD
+═══════════════════════════════════════════════ -->
+<div class="screen" id="screen-4">
+  <div class="recruiter-wrap">
+    <!-- Filter Sidebar -->
+    <aside class="rec-sidebar">
+      <div style="margin-bottom:20px;">
+        <div style="font-size:16px;font-weight:700;color:var(--text);letter-spacing:-.3px;margin-bottom:4px;">Find Candidates</div>
+        <div style="font-size:13px;color:var(--text3);">SkillVerify Recruiter</div>
+      </div>
+
+      <div class="job-profile-card">
+        <div class="jp-title">📋 Active Job Profile</div>
+        <div class="jp-sub">Senior Full-Stack Engineer</div>
+        <div class="jp-skills">
+          <span class="jp-skill-tag">Python ≥75</span>
+          <span class="jp-skill-tag">React ≥70</span>
+          <span class="jp-skill-tag">AWS ≥60</span>
+          <span class="jp-skill-tag">PostgreSQL</span>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-label">Skills Required</div>
+        <div class="skill-filter-tags">
+          <span class="skill-filter-tag">Python <span class="remove">×</span></span>
+          <span class="skill-filter-tag">React <span class="remove">×</span></span>
+          <span class="skill-filter-tag">AWS <span class="remove">×</span></span>
+        </div>
+        <select class="filter-select"><option>+ Add skill filter…</option><option>TypeScript</option><option>Docker</option><option>Node.js</option></select>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-label">Min Confidence Score</div>
+        <div class="score-slider-wrap">
+          <input type="range" class="score-slider" min="0" max="100" value="70" oninput="document.getElementById('scoreVal').textContent=this.value"/>
+          <span class="score-val" id="scoreVal">70</span>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-label">Location</div>
+        <select class="filter-select"><option>Anywhere (Remote OK)</option><option>United Kingdom</option><option>United States</option><option>Pakistan</option></select>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-label">Experience</div>
+        <select class="filter-select"><option>3 to 6 years</option><option>1 to 3 years</option><option>6+ years</option></select>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-label">Verification Recency</div>
+        <select class="filter-select"><option>Verified in last 6 months</option><option>Last 12 months</option><option>Any time</option></select>
+      </div>
+
+      <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:8px;" onclick="applyFilters(this)">🔍 Apply Filters</button>
+    </aside>
+
+    <!-- Candidate Results -->
+    <main class="rec-main">
+      <div style="background:linear-gradient(135deg,var(--primary-light),var(--accent-light));border:1px solid rgba(79,70,229,.2);border-radius:var(--radius);padding:16px 20px;margin-bottom:18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <div style="font-size:22px;">🧠</div>
+        <div style="flex:1;min-width:240px;">
+          <div style="font-size:13px;font-weight:700;color:var(--primary);">Scoring model improving from your hiring outcomes</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:2px;">347 outcomes tagged across your org this year. For "AWS," code-repo evidence is now weighted <strong>+12%</strong> higher than the assessment score after recalibration. It predicted on-the-job success more reliably than the test alone.</div>
+        </div>
+        <span style="font-size:11px;font-weight:700;color:var(--text3);background:white;padding:6px 12px;border-radius:100px;border:1px solid var(--border);">Updated weekly</span>
+      </div>
+
+      <div class="rec-topbar">
+        <div class="results-count" id="results-count"><strong>47 candidates</strong> match your job profile · 12 are <span style="color:var(--success);font-weight:700;">top matches</span></div>
+        <div class="sort-row">
+          <span style="font-size:13px;color:var(--text3);">Sort by:</span>
+          <button class="sort-btn active" onclick="setSort(this)">Match %</button>
+          <button class="sort-btn" onclick="setSort(this)">Score</button>
+          <button class="sort-btn" onclick="setSort(this)">Recency</button>
+        </div>
+      </div>
+
+      <div class="candidate-grid">
+        <!-- Candidate 1 — Top Match -->
+        <div class="candidate-card top-match">
+          <div class="top-match-tag">⭐ Top Match</div>
+          <div class="cc-top">
+            <div class="cc-avatar" style="background:linear-gradient(135deg,#818CF8,#06B6D4)">AO</div>
+            <div style="flex:1;">
+              <div class="cc-name">Ayesha Raza</div>
+              <div class="cc-title">Senior Engineer · Lahore 🇵🇰 · Remote</div>
+            </div>
+            <div class="cc-match">
+              <div class="match-pct high">96%</div>
+              <div class="match-label">MATCH</div>
+            </div>
+          </div>
+          <div class="cc-skills">
+            <div class="cc-skill-row">
+              <div class="cc-tier-dot" style="background:var(--success)"></div>
+              <span class="cc-skill-name">Python</span>
+              <div class="cc-bar"><div class="cc-bar-fill fill-verified" style="width:94%"></div></div>
+              <span class="cc-score">94</span>
+            </div>
+            <div class="cc-skill-row">
+              <div class="cc-tier-dot" style="background:var(--success)"></div>
+              <span class="cc-skill-name">React</span>
+              <div class="cc-bar"><div class="cc-bar-fill fill-verified" style="width:88%"></div></div>
+              <span class="cc-score">88</span>
+            </div>
+            <div class="cc-skill-row">
+              <div class="cc-tier-dot" style="background:var(--accent)"></div>
+              <span class="cc-skill-name">AWS</span>
+              <div class="cc-bar"><div class="cc-bar-fill fill-proficient" style="width:76%"></div></div>
+              <span class="cc-score">76</span>
+            </div>
+          </div>
+          <div class="cc-actions">
+            <button class="cc-btn cc-btn-view" onclick="showScreen(3)">📋 View Report</button>
+            <button class="cc-btn cc-btn-save" onclick="toggleSave(this)">💾 Save</button>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);">
+            <span style="font-size:11px;color:var(--text3);align-self:center;margin-right:2px;">Outcome:</span>
+            <button style="flex:1;padding:6px;font-size:11px;font-weight:600;border-radius:6px;border:1px solid var(--success);color:var(--success);background:var(--success-light);cursor:pointer;" onclick="tagOutcome(this,'hired')">✓ Hired</button>
+            <button style="flex:1;padding:6px;font-size:11px;font-weight:600;border-radius:6px;border:1px solid var(--border);color:var(--text2);background:white;cursor:pointer;" onclick="tagOutcome(this,'rejected')">✕ Rejected</button>
+          </div>
+        </div>
+
+        <!-- Candidate 2 -->
+        <div class="candidate-card top-match">
+          <div class="top-match-tag">⭐ Top Match</div>
+          <div class="cc-top">
+            <div class="cc-avatar" style="background:linear-gradient(135deg,#10B981,#06B6D4)">KA</div>
+            <div style="flex:1;">
+              <div class="cc-name">Hamza Sheikh</div>
+              <div class="cc-title">Full-Stack Engineer · Karachi 🇵🇰 · Remote</div>
+            </div>
+            <div class="cc-match">
+              <div class="match-pct high">91%</div>
+              <div class="match-label">MATCH</div>
+            </div>
+          </div>
+          <div class="cc-skills">
+            <div class="cc-skill-row">
+              <div class="cc-tier-dot" style="background:var(--success)"></div>
+              <span class="cc-skill-name">Python</span>
+              <div class="cc-bar"><div class="cc-bar-fill fill-verified" style="width:90%"></div></div>
+              <span class="cc-score">90</span>
+            </div>
+            <div class="cc-skill-row">
+              <div class="cc-tier-dot" style="background:var(--success)"></div>
+              <span class="cc-skill-name">React</span>
+              <div class="cc-bar"><div class="cc-bar-fill fill-verified" style="width:83%"></div></div>
+              <span class="cc-score">83</span>
+            </div>
+            <div class="cc-skill-row">
+              <div class="cc-tier-dot" style="background:var(--success)"></div>
+              <span class="cc-skill-name">AWS</span>
+              <div class="cc-bar"><div class="cc-bar-fill fill-verified" style="width:85%"></div></div>
+              <span class="cc-score">85</span>
+            </div>
+          </div>
+          <div class="cc-actions">
+            <button class="cc-btn cc-btn-view" onclick="showScreen(3)">📋 View Report</button>
+            <button class="cc-btn cc-btn-save" onclick="toggleSave(this)">💾 Save</button>
+          </div>
+        </div>
+
+        <!-- Candidate 3 -->
+        <div class="candidate-card">
+          <div class="cc-top">
+            <div class="cc-avatar" style="background:linear-gradient(135deg,#F59E0B,#EF4444)">SR</div>
+            <div style="flex:1;">
+              <div class="cc-name">Fatima Tariq</div>
+              <div class="cc-title">Software Engineer · Islamabad 🇵🇰 · Remote</div>
+            </div>
+            <div class="cc-match">
+              <div class="match-pct med">78%</div>
+              <div class="match-label">MATCH</div>
+            </div>
+          </div>
+          <div class="cc-skills">
+            <div class="cc-skill-row">
+              <div class="cc-tier-dot" style="background:var(--success)"></div>
+              <span class="cc-skill-name">Python</span>
+              <div class="cc-bar"><div class="cc-bar-fill fill-verified" style="width:85%"></div></div>
+              <span class="cc-score">85</span>
+            </div>
+            <div class="cc-skill-row">
+              <div class="cc-tier-dot" style="background:var(--warning)"></div>
+              <span class="cc-skill-name">React</span>
+              <div class="cc-bar"><div class="cc-bar-fill fill-developing" style="width:62%"></div></div>
+              <span class="cc-score">62</span>
+            </div>
+            <div class="cc-skill-row">
+              <div class="cc-tier-dot" style="background:var(--accent)"></div>
+              <span class="cc-skill-name">AWS</span>
+              <div class="cc-bar"><div class="cc-bar-fill fill-proficient" style="width:71%"></div></div>
+              <span class="cc-score">71</span>
+            </div>
+          </div>
+          <div class="cc-actions">
+            <button class="cc-btn cc-btn-view" onclick="showScreen(3)">📋 View Report</button>
+            <button class="cc-btn cc-btn-save" onclick="toggleSave(this)">💾 Save</button>
+          </div>
+        </div>
+
+        <!-- Candidate 4 -->
+        <div class="candidate-card">
+          <div class="cc-top">
+            <div class="cc-avatar" style="background:linear-gradient(135deg,#8B5CF6,#EC4899)">TL</div>
+            <div style="flex:1;">
+              <div class="cc-name">Bilal Ahmed</div>
+              <div class="cc-title">Backend Engineer · Rawalpindi 🇵🇰 · Remote</div>
+            </div>
+            <div class="cc-match">
+              <div class="match-pct med">74%</div>
+              <div class="match-label">MATCH</div>
+            </div>
+          </div>
+          <div class="cc-skills">
+            <div class="cc-skill-row">
+              <div class="cc-tier-dot" style="background:var(--success)"></div>
+              <span class="cc-skill-name">Python</span>
+              <div class="cc-bar"><div class="cc-bar-fill fill-verified" style="width:82%"></div></div>
+              <span class="cc-score">82</span>
+            </div>
+            <div class="cc-skill-row">
+              <div class="cc-tier-dot" style="background:var(--warning)"></div>
+              <span class="cc-skill-name">React</span>
+              <div class="cc-bar"><div class="cc-bar-fill fill-developing" style="width:55%"></div></div>
+              <span class="cc-score">55</span>
+            </div>
+            <div class="cc-skill-row">
+              <div class="cc-tier-dot" style="background:var(--success)"></div>
+              <span class="cc-skill-name">AWS</span>
+              <div class="cc-bar"><div class="cc-bar-fill fill-verified" style="width:88%"></div></div>
+              <span class="cc-score">88</span>
+            </div>
+          </div>
+          <div class="cc-actions">
+            <button class="cc-btn cc-btn-view" onclick="showScreen(3)">📋 View Report</button>
+            <button class="cc-btn cc-btn-save" onclick="toggleSave(this)">💾 Save</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- How it works modal -->
+<div class="modal-overlay" id="how-it-works-modal" onclick="if(event.target===this) closeModal('how-it-works-modal')">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">How SkillVerify works</div>
+      <button class="modal-close" onclick="closeModal('how-it-works-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="hiw-step">
+        <div class="hiw-num">1</div>
+        <div>
+          <div class="hiw-title">Connect LinkedIn</div>
+          <div class="hiw-text">Import your headline, experience, education, and listed skills automatically. No manual re-entry.</div>
+        </div>
+      </div>
+      <div class="hiw-step">
+        <div class="hiw-num">2</div>
+        <div>
+          <div class="hiw-title">Upload your work</div>
+          <div class="hiw-text">Add your resume, GitHub repos, and certificates. This is the evidence the AI scores against.</div>
+        </div>
+      </div>
+      <div class="hiw-step">
+        <div class="hiw-num">3</div>
+        <div>
+          <div class="hiw-title">Complete AI assessments</div>
+          <div class="hiw-text">Take short, adaptive technical assessments for each claimed skill. Every score is explainable, never a black box.</div>
+        </div>
+      </div>
+      <div class="hiw-step">
+        <div class="hiw-num">4</div>
+        <div>
+          <div class="hiw-title">Earn verified badges</div>
+          <div class="hiw-text">Get a tiered, expiring badge per skill and a shareable public profile that recruiters can actually trust.</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="closeModal('how-it-works-modal'); showScreen(1)">Get started ⚡</button>
+    </div>
+  </div>
+</div>
+
+<!-- Log in modal -->
+<div class="modal-overlay" id="login-modal" onclick="if(event.target===this) closeModal('login-modal')">
+  <div class="modal-box modal-box-sm">
+    <div class="modal-header">
+      <div class="modal-title">Log in to SkillVerify</div>
+      <button class="modal-close" onclick="closeModal('login-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <button class="btn btn-outline" style="width:100%;justify-content:center;margin-bottom:14px;" onclick="doLogin()">🔗 Continue with LinkedIn</button>
+      <div class="modal-divider"><span>or</span></div>
+      <label class="modal-label">Email</label>
+      <input class="modal-input" type="email" placeholder="you@example.com" id="login-email">
+      <label class="modal-label">Password</label>
+      <input class="modal-input" type="password" placeholder="••••••••" id="login-password">
+      <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:6px;" onclick="doLogin()">Log in</button>
+    </div>
+    <div class="modal-footer modal-footer-note">
+      Don't have an account? <a href="#" onclick="closeModal('login-modal'); showScreen(1); return false;">Get started for free</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  function showScreen(n) {
+    document.querySelectorAll('.screen').forEach((s,i) => {
+      s.classList.toggle('active', i === n);
+    });
+    document.querySelectorAll('.tab-btn').forEach((b,i) => {
+      b.classList.toggle('active', i === n);
+    });
+  }
+
+  // Interactive option selection
+  document.querySelectorAll('.q-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      opt.closest('.q-options').querySelectorAll('.q-option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+    });
+  });
+
+  // --- Toast (used by features not yet wired to a full screen in this prototype) ---
+  function toast(msg) {
+    let el = document.getElementById('proto-toast');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'proto-toast';
+      el.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a1a2e;color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.25);z-index:9999;opacity:0;transition:opacity .2s, transform .2s;pointer-events:none;';
+      document.body.appendChild(el);
+    }
+    el.textContent = msg;
+    requestAnimationFrame(() => {
+      el.style.opacity = '1';
+      el.style.transform = 'translateX(-50%) translateY(0)';
+    });
+    clearTimeout(el._t);
+    el._t = setTimeout(() => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateX(-50%) translateY(20px)';
+    }, 2200);
+  }
+
+  function comingSoon(feature) {
+    toast(`🚧 ${feature}: not built in this prototype yet`);
+  }
+
+  function openModal(id) {
+    document.getElementById(id).classList.add('open');
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+    }
+  });
+
+  function doLogin() {
+    closeModal('login-modal');
+    showScreen(1);
+    toast('✓ Logged in as Ayesha Raza');
+  }
+
+  function copyProfileLink(btn) {
+    const url = 'https://skillverify.io/u/ayesha-raza';
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).catch(() => {});
+    }
+    const original = btn.textContent;
+    btn.textContent = '✓ Copied!';
+    setTimeout(() => { btn.textContent = original; }, 1600);
+  }
+
+  function applyFilters(btn) {
+    const original = btn.textContent;
+    btn.textContent = '🔄 Filtering…';
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.textContent = original;
+      btn.disabled = false;
+      const counts = ['47 candidates', '31 candidates', '52 candidates'];
+      const pick = counts[Math.floor(Math.random() * counts.length)];
+      const countEl = document.getElementById('results-count');
+      if (countEl) {
+        const top = Math.max(4, Math.round(parseInt(pick) * 0.25));
+        countEl.innerHTML = `<strong>${pick}</strong> match your job profile · ${top} are <span style="color:var(--success);font-weight:700;">top matches</span>`;
+      }
+      toast('Filters applied');
+    }, 500);
+  }
+
+  function setSort(btn) {
+    btn.closest('.sort-row').querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    toast(`Sorted by ${btn.textContent}`);
+  }
+
+  function toggleSave(btn) {
+    const saved = btn.dataset.saved === '1';
+    btn.dataset.saved = saved ? '0' : '1';
+    btn.textContent = saved ? '💾 Save' : '✓ Saved';
+    btn.style.background = saved ? '' : 'var(--success-light)';
+    btn.style.color = saved ? '' : 'var(--success)';
+    btn.style.borderColor = saved ? '' : 'var(--success)';
+  }
+
+  function tagOutcome(btn, outcome) {
+    const row = btn.parentElement;
+    row.querySelectorAll('button').forEach(b => {
+      b.style.opacity = '0.45';
+      b.style.fontWeight = '600';
+    });
+    btn.style.opacity = '1';
+    btn.style.outline = `2px solid ${outcome === 'hired' ? 'var(--success)' : 'var(--text3)'}`;
+    toast(outcome === 'hired' ? '✓ Outcome tagged: Hired. Feeds the scoring recalibration loop' : 'Outcome tagged: Rejected. Feeds the scoring recalibration loop');
+  }
+
+  function finishAssessment() {
+    toast('Scoring your answer…');
+    setTimeout(() => {
+      showScreen(1);
+      toast('✓ AWS score updated: Developing tier (52/100)');
+    }, 900);
+  }
+</script>
+</body>
+</html>
