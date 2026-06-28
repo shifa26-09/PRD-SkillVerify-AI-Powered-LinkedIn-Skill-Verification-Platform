@@ -33,10 +33,6 @@ This repo contains the **frontend prototype only**: a single static HTML file wi
 - **Standalone value for job seekers from day one.** The Skill Gap Intelligence panel gives candidates a reason to verify even with zero recruiters on the platform. This avoids the classic two-sided marketplace cold-start problem.
 - **A compounding moat, not just a feature.** Recruiter-confirmed hiring outcomes feed back into the scoring model, so the weighting gets more accurate the longer the product runs. This is something a competitor can't copy by cloning the UI.
 
-## Tech
-
-Single-file HTML/CSS/vanilla JS. No build step, no dependencies. Open `index.html` directly in a browser or visit the live demo link above.
-
 ## Status
 
 Concept, prototype, and full PRD complete. Pre-build stage. This is a portfolio/case-study artifact, not a production product.
