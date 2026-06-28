@@ -2,7 +2,7 @@
 
 **A clickable prototype for a product that turns self-reported LinkedIn skills into evidence-backed, recruiter-trusted credentials.**
 
-🔗 **[Live demo](https://YOUR-USERNAME.github.io/skillverify-prototype/)**: 5 interactive screens, no signup required
+🔗 **[Live demo](https://prd-skill-verify-ai-powered-linked.vercel.app/)**: 5 interactive screens, no signup required
 📄 **[Full PRD](https://app.notion.com/p/38c9422dc78d81df944bc313268c70c1)**: 19-section product requirements document
 
 ---
